@@ -44,8 +44,8 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
             else
                 Picasso.with(itemView.getContext()).load(R.drawable.demo_music_logo).into(mIvSongLogo);
         }
-//        if (position % 2 == 0) {
-//            mRlSongCell.setBackgroundResource(R.drawable.gradient_song_cell);
-//        }
+        if (position % 2 == 0) {
+            mRlSongCell.setBackgroundResource(R.drawable.gradient_song_cell);
+        }
     }
 }

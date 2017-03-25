@@ -10,6 +10,7 @@
     <!--General Colors-->
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="transparent">#00ffffff</color>
 
     <!-- TabBar Colors-->
     <color name="divider_color">#4D000000</color>

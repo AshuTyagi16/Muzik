@@ -26,7 +26,7 @@ import butterknife.OnClick;
  * Created by Ashu on 3/25/2017.
  */
 
-public class SongsFragment extends MusicFragment {
+public class SongListFragment extends MusicFragment {
 
     @BindView(R.id.rv_songs)
     RecyclerView mRvSongs;
@@ -81,7 +81,7 @@ public class SongsFragment extends MusicFragment {
                 MediaStore.Audio.Media.ALBUM_ID
         };
 
-        mCursor = getActivity().managedQuery(
+        mCursor = getActivity().getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 selection,

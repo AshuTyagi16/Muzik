@@ -15,7 +15,7 @@ import com.music.player.muzik.fragment.AlbumsFragment;
 import com.music.player.muzik.fragment.ArtistsFragment;
 import com.music.player.muzik.fragment.FolderFragment;
 import com.music.player.muzik.fragment.PlayListFragment;
-import com.music.player.muzik.fragment.SongsFragment;
+import com.music.player.muzik.fragment.SongListFragment;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
                 .add(R.string.playlist, PlayListFragment.class)
-                .add(R.string.songs, SongsFragment.class)
+                .add(R.string.songs, SongListFragment.class)
                 .add(R.string.albums, AlbumsFragment.class)
                 .add(R.string.folder, FolderFragment.class)
                 .add(R.string.artists, ArtistsFragment.class)
@@ -81,5 +81,11 @@ public class MainActivity extends AppCompatActivity {
             mIvPausePlay.setImageResource(R.drawable.ic_pause);
             flag = true;
         }
+    }
+
+    @OnClick(R.id.iv_song_logo_universal)
+    public void openSongPlayerActivity() {
+        startActivity(SongPlayerActivity.newIntent(this));
+        overridePendingTransition(R.anim.slide_in_up, R.anim.nothing);
     }
 }
