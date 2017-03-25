@@ -3,4 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--ToolBar Background-->
+    <color name="background_action_bar">#201F1D</color>
+
+    <!--General Colors-->
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <!-- TabBar Colors-->
+    <color name="divider_color">#4D000000</color>
 </resources>
