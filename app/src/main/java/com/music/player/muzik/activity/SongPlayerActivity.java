@@ -7,6 +7,9 @@ import android.view.MenuItem;
 
 import com.music.player.muzik.R;
 import com.music.player.muzik.fragment.SongPlayerFragment;
+import com.music.player.muzik.model.Song;
+
+import java.util.ArrayList;
 
 /**
  * Created by Ashu on 3/25/2017.
@@ -14,9 +17,11 @@ import com.music.player.muzik.fragment.SongPlayerFragment;
 
 public class SongPlayerActivity extends SingleFragmentActivity {
 
+    private static ArrayList<Song> mSongsList;
+
     @Override
     protected Fragment createFragment() {
-        return SongPlayerFragment.newInstance();
+        return SongPlayerFragment.newInstance(mSongsList);
     }
 
     @Override
@@ -34,7 +39,8 @@ public class SongPlayerActivity extends SingleFragmentActivity {
         return R.color.background_action_bar;
     }
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(Context context, ArrayList<Song> list) {
+        mSongsList = list;
         return new Intent(context, SongPlayerActivity.class);
     }
 

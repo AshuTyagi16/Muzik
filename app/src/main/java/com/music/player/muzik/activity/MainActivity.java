@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.iv_song_logo_universal)
     public void openSongPlayerActivity() {
-        startActivity(SongPlayerActivity.newIntent(this));
+        startActivity(SongPlayerActivity.newIntent(this, SongListFragment.getSongList()));
         overridePendingTransition(R.anim.slide_in_up, R.anim.nothing);
     }
 }

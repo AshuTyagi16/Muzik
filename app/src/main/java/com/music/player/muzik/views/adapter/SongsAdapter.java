@@ -12,6 +12,8 @@ import com.music.player.muzik.views.SongsViewHolder;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 /**
  * Created by Ashu on 3/25/2017.
  */
@@ -19,6 +21,11 @@ import java.util.ArrayList;
 public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> implements SectionTitleProvider {
 
     private ArrayList<Song> mSongsList;
+    private final CropCircleTransformation cropCircleTransformation;
+
+    public SongsAdapter() {
+        cropCircleTransformation = new CropCircleTransformation();
+    }
 
     @Override
     public SongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

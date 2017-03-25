@@ -31,7 +31,7 @@ public class SongListFragment extends MusicFragment {
 
     private Song song;
     private SongsAdapter mSongsAdapter;
-    private ArrayList<Song> mSongsList;
+    private static ArrayList<Song> mSongsList;
     private Cursor mCursor;
     private static final int INITIAL_PREFETCH_ITEM_COUNT = 20;
 
@@ -65,5 +65,9 @@ public class SongListFragment extends MusicFragment {
 
     public void fetchSongs() {
         mSongsList = new ArrayList<>(new MusicLoader(getContext()).loadInBackground());
+    }
+
+    public static ArrayList<Song> getSongList(){
+        return mSongsList;
     }
 }
