@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.futuremind.recyclerviewfastscroll.FastScroller;
 import com.music.player.muzik.R;
+import com.music.player.muzik.model.Song;
 import com.music.player.muzik.views.adapter.SongsAdapter;
 
 import java.util.ArrayList;
@@ -29,8 +30,9 @@ public class SongsFragment extends MusicFragment {
     @BindView(R.id.fastscroll_songs)
     FastScroller mFastScroller;
 
+    private Song song;
     private SongsAdapter mSongsAdapter;
-    private ArrayList<String> mSongsList;
+    private ArrayList<Song> mSongsList;
     private Cursor mCursor;
     private static final int INITIAL_PREFETCH_ITEM_COUNT = 20;
 
@@ -67,18 +69,14 @@ public class SongsFragment extends MusicFragment {
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
 
         String[] projection = {
-                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.ALBUM_ID
         };
-//        String[] projection = {
-//                MediaStore.Audio.Media._ID,
-//                MediaStore.Audio.Media.ARTIST,
-//                MediaStore.Audio.Media.TITLE,
-//                MediaStore.Audio.Media.DATA,
-//                MediaStore.Audio.Media.DISPLAY_NAME,
-//                MediaStore.Audio.Media.DURATION
-//        };
 
         mCursor = getActivity().managedQuery(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -87,19 +85,19 @@ public class SongsFragment extends MusicFragment {
                 null,
                 sortOrder);
 
-        mSongsList = new ArrayList<String>();
+        mSongsList = new ArrayList<Song>();
+
         while (mCursor.moveToNext()) {
-            mSongsList.add(mCursor.getString(0) + "99999"
-                    + mCursor.getString(1) + "99999");
+            song = new Song();
+            song.setId(mCursor.getString(0));
+            song.setArtist(mCursor.getString(1));
+            song.setTitle(mCursor.getString(2));
+            song.setData(mCursor.getString(3));
+            song.setDisplayName(mCursor.getString(4));
+            song.setDuration(mCursor.getString(5));
+            song.setAlbumID(mCursor.getString(6));
+            mSongsList.add(song);
         }
-//        while (mCursor.moveToNext()) {
-//            mSongsList.add(mCursor.getString(0) + "||"
-//                    + mCursor.getString(1) + "||"
-//                    + mCursor.getString(2) + "||"
-//                    + mCursor.getString(3) + "||"
-//                    + mCursor.getString(4) + "||"
-//                    + mCursor.getString(5));
-//        }
     }
 
 }

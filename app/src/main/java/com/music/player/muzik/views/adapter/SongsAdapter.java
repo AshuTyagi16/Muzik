@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
 import com.music.player.muzik.R;
+import com.music.player.muzik.model.Song;
 import com.music.player.muzik.views.SongsViewHolder;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> implements SectionTitleProvider {
 
-    private ArrayList<String> mSongsList;
+    private ArrayList<Song> mSongsList;
 
     @Override
     public SongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,14 +40,13 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> implemen
             return 0;
     }
 
-    public void setSongList(ArrayList<String> songlist) {
+    public void setSongList(ArrayList<Song> songlist) {
         mSongsList = songlist;
         notifyDataSetChanged();
     }
 
     @Override
     public String getSectionTitle(int position) {
-        String parts[] = mSongsList.get(position).split("99999");
-        return parts[0].substring(0, 1);
+        return mSongsList.get(position).getTitle().substring(0, 1);
     }
 }
