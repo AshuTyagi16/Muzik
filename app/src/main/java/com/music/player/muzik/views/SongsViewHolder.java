@@ -39,10 +39,10 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
                 mTvSongName.setText(song.getTitle());
             if (song.getArtist() != null && song.getArtist().length() > 0)
                 mTvArtistName.setText(song.getArtist());
-            if (song.getAlbumArt() != null && song.getAlbumArt().length() > 0)
-                Picasso.with(itemView.getContext()).load(song.getAlbumArt()).into(mIvSongLogo);
-            else
-                Picasso.with(itemView.getContext()).load(R.drawable.demo_music_logo).into(mIvSongLogo);
+            if (song.getAlbumArtUri() != null)
+                Picasso.with(itemView.getContext())
+                        .load(song.getAlbumArtUri()).error(R.drawable.demo_music_logo)
+                        .placeholder(R.drawable.demo_music_logo).into(mIvSongLogo);
         }
         if (position % 2 == 0) {
             mRlSongCell.setBackgroundResource(R.drawable.gradient_song_cell);

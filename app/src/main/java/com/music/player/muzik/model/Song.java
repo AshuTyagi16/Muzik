@@ -1,5 +1,7 @@
 package com.music.player.muzik.model;
 
+import android.net.Uri;
+
 /**
  * Created by Ashu on 3/25/2017.
  */
@@ -11,17 +13,38 @@ public class Song {
     private String title;
     private String data;
     private String displayName;
-    private String duration;
+    private long duration;
     private String albumID;
-    private String albumArt;
+    private String album;
 
-    public String getAlbumArt() {
-        return albumArt;
+    public Uri getAlbumArtUri() {
+        return albumArtUri;
     }
 
-    public void setAlbumArt(String albumArt) {
-        this.albumArt = albumArt;
+    public void setAlbumArtUri(Uri albumArtUri) {
+        this.albumArtUri = albumArtUri;
     }
+
+    public Uri getFileUri() {
+        return fileUri;
+    }
+
+    public void setFileUri(Uri fileUri) {
+        this.fileUri = fileUri;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    private Uri albumArtUri;
+
+    private Uri fileUri;
+
 
     public String getId() {
         return id;
@@ -63,11 +86,11 @@ public class Song {
         this.displayName = displayName;
     }
 
-    public String getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
