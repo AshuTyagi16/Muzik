@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_action_bar">
+    android:background="@drawable/background_song_player">
 
     <com.cleveroad.play_widget.PlayLayout
         android:id="@+id/play_layout"

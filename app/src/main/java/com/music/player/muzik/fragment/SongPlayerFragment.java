@@ -24,6 +24,7 @@ import com.music.player.muzik.model.Song;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -244,37 +245,34 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
             return;
         }
         playingIndex++;
-//        if (playingIndex >= items.size()) {
-//            playingIndex = 0;
-//            if (items.size() == 0) {
-////                audioWidget.controller().stop();
-//                return;
-//            }
-//        }
-//        startCurrentTrack();
-        setImageForItem();
+        if (playingIndex >= mSongList.size()) {
+            playingIndex = 0;
+            if (mSongList.size() == 0) {
+//                audioWidget.controller().stop();
+                return;
+            }
+        }
+        startCurrentTrack();
     }
 
     public void onNextClicked() {
-//        if (items.size() == 0)
-//            return;
+        if (mSongList.size() == 0)
+            return;
         playingIndex++;
-//        if (playingIndex >= items.size()) {
-//            playingIndex = 0;
-//        }
-//        startCurrentTrack();
-        setImageForItem();
+        if (playingIndex >= mSongList.size()) {
+            playingIndex = 0;
+        }
+        startCurrentTrack();
     }
 
     public void onPreviousClicked() {
-//        if (items.size() == 0)
-//            return;
+        if (mSongList.size() == 0)
+            return;
         playingIndex--;
-//        if (playingIndex < 0) {
-//            playingIndex = items.size() - 1;
-//        }
-//        startCurrentTrack();
-        setImageForItem();
+        if (playingIndex < 0) {
+            playingIndex = mSongList.size() - 1;
+        }
+        startCurrentTrack();
     }
 
     private void startTrackingPosition() {
@@ -339,6 +337,22 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
 //        playingIndex = items.indexOf(item);
 //        startCurrentTrack();
 //    }
+
+    private void startCurrentTrack() {
+        setImageForItem();
+        if (mediaPlayer.isPlaying() || paused) {
+            mediaPlayer.stop();
+            paused = false;
+        }
+        mediaPlayer.reset();
+        try {
+            mediaPlayer.setDataSource(getContext(), mSongList.get(playingIndex).getFileUri());
+            mediaPlayer.prepareAsync();
+            preparing = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void setImageForItem() {
         if (playingIndex >= 0) {
