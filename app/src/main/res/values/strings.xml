@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Muzik</string>
+
+    <!--TAB BAR TITLES-->
+    <string name="songs">SONGS</string>
+    <string name="folder">FOLDERS</string>
+    <string name="albums">ALBUMS</string>
+    <string name="playlist">PLAYLIST</string>
+    <string name="artists">ARTISTS</string>
+
+</resources>
