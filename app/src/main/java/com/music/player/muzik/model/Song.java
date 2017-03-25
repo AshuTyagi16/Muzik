@@ -13,6 +13,15 @@ public class Song {
     private String displayName;
     private String duration;
     private String albumID;
+    private String albumArt;
+
+    public String getAlbumArt() {
+        return albumArt;
+    }
+
+    public void setAlbumArt(String albumArt) {
+        this.albumArt = albumArt;
+    }
 
     public String getId() {
         return id;

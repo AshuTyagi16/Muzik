@@ -1,6 +1,5 @@
 package com.music.player.muzik.fragment;
 
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -8,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.futuremind.recyclerviewfastscroll.FastScroller;
@@ -18,6 +20,7 @@ import com.music.player.muzik.views.adapter.SongsAdapter;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Ashu on 3/25/2017.
@@ -98,6 +101,7 @@ public class SongsFragment extends MusicFragment {
             song.setAlbumID(mCursor.getString(6));
             mSongsList.add(song);
         }
-    }
 
+        mCursor.close();
+    }
 }
