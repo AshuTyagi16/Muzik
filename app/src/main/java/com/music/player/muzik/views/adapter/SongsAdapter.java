@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
 import com.music.player.muzik.R;
 import com.music.player.muzik.views.SongsViewHolder;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * Created by Ashu on 3/25/2017.
  */
 
-public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> {
+public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> implements SectionTitleProvider {
 
     private ArrayList<String> mSongsList;
 
@@ -38,8 +39,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> {
             return 0;
     }
 
-    public void setSongList(ArrayList<String> list) {
-        mSongsList = list;
+    public void setSongList(ArrayList<String> songlist) {
+        mSongsList = songlist;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public String getSectionTitle(int position) {
+        String parts[] = mSongsList.get(position).split("99999");
+        return parts[0].substring(0, 1);
     }
 }

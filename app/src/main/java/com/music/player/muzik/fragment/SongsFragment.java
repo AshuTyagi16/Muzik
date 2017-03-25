@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.futuremind.recyclerviewfastscroll.FastScroller;
 import com.music.player.muzik.R;
 import com.music.player.muzik.views.adapter.SongsAdapter;
 
@@ -25,10 +26,13 @@ public class SongsFragment extends MusicFragment {
 
     @BindView(R.id.rv_songs)
     RecyclerView mRvSongs;
+    @BindView(R.id.fastscroll_songs)
+    FastScroller mFastScroller;
 
     private SongsAdapter mSongsAdapter;
     private ArrayList<String> mSongsList;
     private Cursor mCursor;
+    private static final int INITIAL_PREFETCH_ITEM_COUNT = 20;
 
     @Override
     protected int getLayoutResId() {
@@ -45,11 +49,16 @@ public class SongsFragment extends MusicFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSongsAdapter = new SongsAdapter();
-        mRvSongs.setLayoutManager(new LinearLayoutManager(getContext()));
+        mFastScroller.setBubbleColor(0xffffffff);
+        mFastScroller.setHandleColor(0xffffffff);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setInitialPrefetchItemCount(INITIAL_PREFETCH_ITEM_COUNT);
+        mRvSongs.setLayoutManager(layoutManager);
         mRvSongs.setAdapter(mSongsAdapter);
-        if (mSongsList != null)
+        mFastScroller.setRecyclerView(mRvSongs);
+        if (mSongsList != null) {
             mSongsAdapter.setSongList(mSongsList);
-        else
+        } else
             Toast.makeText(getContext(), "No Songs Found", Toast.LENGTH_SHORT).show();
     }
 
@@ -59,7 +68,8 @@ public class SongsFragment extends MusicFragment {
 
         String[] projection = {
                 MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ARTIST
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM_ID
         };
 //        String[] projection = {
 //                MediaStore.Audio.Media._ID,
@@ -80,7 +90,7 @@ public class SongsFragment extends MusicFragment {
         mSongsList = new ArrayList<String>();
         while (mCursor.moveToNext()) {
             mSongsList.add(mCursor.getString(0) + "99999"
-                    + mCursor.getString(1));
+                    + mCursor.getString(1) + "99999");
         }
 //        while (mCursor.moveToNext()) {
 //            mSongsList.add(mCursor.getString(0) + "||"
@@ -91,4 +101,5 @@ public class SongsFragment extends MusicFragment {
 //                    + mCursor.getString(5));
 //        }
     }
+
 }
