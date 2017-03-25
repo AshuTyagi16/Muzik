@@ -8,11 +8,15 @@ import android.view.ViewGroup;
 import com.music.player.muzik.R;
 import com.music.player.muzik.views.SongsViewHolder;
 
+import java.util.ArrayList;
+
 /**
  * Created by Ashu on 3/25/2017.
  */
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> {
+
+    private ArrayList<String> mSongsList;
 
     @Override
     public SongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -23,11 +27,19 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsViewHolder> {
 
     @Override
     public void onBindViewHolder(SongsViewHolder holder, int position) {
-        holder.setSong(position);
+        holder.setSong(mSongsList.get(position), position);
     }
 
     @Override
     public int getItemCount() {
-        return 30;
+        if (mSongsList != null && mSongsList.size() != 0)
+            return mSongsList.size();
+        else
+            return 0;
+    }
+
+    public void setSongList(ArrayList<String> list) {
+        mSongsList = list;
+        notifyDataSetChanged();
     }
 }

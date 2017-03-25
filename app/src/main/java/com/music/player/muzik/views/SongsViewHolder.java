@@ -1,6 +1,7 @@
 package com.music.player.muzik.views;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,7 +32,20 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void setSong(int position) {
+    public void setSong(String song, int position) {
+        if (song.length() > 0) {
+            String parts[] = song.split("99999");
+            if (parts[0] != null && parts[0].length() > 0) {
+                String song_name = parts[0];
+                Log.d("setSong", "ZERO : "+parts[0]);
+                mTvSongName.setText(song_name);
+            }
+            if (parts[1] != null && parts[1].length() > 0) {
+                Log.d("setSong", "ONE : "+parts[1]);
+                String artist_name = parts[1];
+                mTvArtistName.setText(artist_name);
+            }
+        }
         if (position % 2 == 0) {
             mRlSongCell.setBackgroundResource(R.drawable.gradient_song_cell);
         }
