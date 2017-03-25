@@ -7,8 +7,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.music.player.muzik.R;
+import com.music.player.muzik.activity.SongPlayerActivity;
+import com.music.player.muzik.fragment.SongListFragment;
 import com.music.player.muzik.model.Song;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,20 +32,32 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.rl_song_cell)
     RelativeLayout mRlSongCell;
 
-    public SongsViewHolder(View itemView) {
+    private ArrayList<Song> mList = new ArrayList<>();
+    private int mPosition;
+
+    public SongsViewHolder(final View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemView.getContext().startActivity(SongPlayerActivity.newIntent(itemView.getContext(), mList, mPosition));
+            }
+        });
     }
 
-    public void setSong(Song song, int position) {
+    public void setSong(ArrayList<Song> song, int position) {
         if (song != null) {
-            if (song.getTitle() != null && song.getTitle().length() > 0)
-                mTvSongName.setText(song.getTitle());
-            if (song.getArtist() != null && song.getArtist().length() > 0)
-                mTvArtistName.setText(song.getArtist());
-            if (song.getAlbumArtUri() != null)
+            mPosition = position;
+            mList = song;
+            if (song.get(position).getTitle() != null && song.get(position).getTitle().length() > 0)
+                mTvSongName.setText(song.get(position).getTitle());
+            if (song.get(position).getArtist() != null && song.get(position).getArtist().length() > 0)
+                mTvArtistName.setText(song.get(position).getArtist());
+            if (song.get(position).getAlbumArtUri() != null)
                 Picasso.with(itemView.getContext())
-                        .load(song.getAlbumArtUri()).error(R.drawable.demo_music_logo)
+                        .load(song.get(position).getAlbumArtUri()).error(R.drawable.demo_music_logo)
                         .placeholder(R.drawable.demo_music_logo).into(mIvSongLogo);
         }
         if (position % 2 == 0) {

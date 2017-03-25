@@ -18,10 +18,11 @@ import java.util.ArrayList;
 public class SongPlayerActivity extends SingleFragmentActivity {
 
     private static ArrayList<Song> mSongsList;
+    private static String EXTRA_PLAYING_INDEX = "playing_index";
 
     @Override
     protected Fragment createFragment() {
-        return SongPlayerFragment.newInstance(mSongsList);
+        return SongPlayerFragment.newInstance(mSongsList, getIntent().getIntExtra(EXTRA_PLAYING_INDEX, 0));
     }
 
     @Override
@@ -39,9 +40,11 @@ public class SongPlayerActivity extends SingleFragmentActivity {
         return R.color.background_action_bar;
     }
 
-    public static Intent newIntent(Context context, ArrayList<Song> list) {
+    public static Intent newIntent(Context context, ArrayList<Song> list, int playingindex) {
         mSongsList = list;
-        return new Intent(context, SongPlayerActivity.class);
+        Intent intent = new Intent(context, SongPlayerActivity.class);
+        intent.putExtra(EXTRA_PLAYING_INDEX, playingindex);
+        return intent;
     }
 
     @Override

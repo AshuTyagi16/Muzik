@@ -49,7 +49,8 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
     private boolean paused;
     private static ArrayList<Song> mSongList;
 
-    private static final String EXTRA_SONG_LIST = "song_list";
+    private static final String EXTRA_PLAYING_INDEX = "playing_index";
+
     private static final long UPDATE_INTERVAL = 20;
     private static final int MY_PERMISSIONS_REQUEST_READ_AUDIO = 11;
 
@@ -58,18 +59,20 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
         return R.layout.fragment_song_player;
     }
 
-    public static SongPlayerFragment newInstance(ArrayList<Song> list) {
+    public static SongPlayerFragment newInstance(ArrayList<Song> list, int playingindex) {
         mSongList = list;
         SongPlayerFragment fragment = new SongPlayerFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable(EXTRA_SONG_LIST, list);
-//        fragment.setArguments(bundle);
+        Bundle bundle = new Bundle();
+        bundle.putInt(EXTRA_PLAYING_INDEX, playingindex);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getArguments() != null)
+            playingIndex = getArguments().getInt(EXTRA_PLAYING_INDEX, 0);
         mPlayLayout.setOnButtonsClickListener(new PlayLayout.OnButtonsClickListenerAdapter() {
             @Override
             public void onPlayButtonClicked() {
@@ -123,7 +126,7 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mPlayLayout.fastOpen();
-        setImageForItem();
+        startCurrentTrack();
 
     }
 
