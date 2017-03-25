@@ -39,6 +39,17 @@
                 android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_small" />
+
+            <TextView
+                android:id="@+id/tv_song_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_song_name"
+                android:layout_margin="2dp"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_small" />
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

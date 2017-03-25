@@ -29,10 +29,8 @@ public class SongListFragment extends MusicFragment {
     @BindView(R.id.fastscroll_songs)
     FastScroller mFastScroller;
 
-    private Song song;
     private SongsAdapter mSongsAdapter;
     private static ArrayList<Song> mSongsList;
-    private Cursor mCursor;
     private static final int INITIAL_PREFETCH_ITEM_COUNT = 20;
 
     @Override

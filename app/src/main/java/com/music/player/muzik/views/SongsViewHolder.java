@@ -13,6 +13,7 @@ import com.music.player.muzik.model.Song;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +30,8 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
     TextView mTvSongName;
     @BindView(R.id.tv_artist_name)
     TextView mTvArtistName;
+    @BindView(R.id.tv_song_duration)
+    TextView mTvSongDuration;
     @BindView(R.id.rl_song_cell)
     RelativeLayout mRlSongCell;
 
@@ -55,6 +58,8 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
                 mTvSongName.setText(song.get(position).getTitle());
             if (song.get(position).getArtist() != null && song.get(position).getArtist().length() > 0)
                 mTvArtistName.setText(song.get(position).getArtist());
+            if ((String.valueOf(song.get(position).getDuration())).length() > 0)
+                mTvSongDuration.setText(String.valueOf(convertDuration(song.get(position).getDuration())));
             if (song.get(position).getAlbumArtUri() != null)
                 Picasso.with(itemView.getContext())
                         .load(song.get(position).getAlbumArtUri()).error(R.drawable.demo_music_logo)
@@ -63,5 +68,16 @@ public class SongsViewHolder extends RecyclerView.ViewHolder {
         if (position % 2 == 0) {
             mRlSongCell.setBackgroundResource(R.drawable.gradient_song_cell);
         }
+    }
+
+    private String convertDuration(long durationInMs) {
+        long durationInSeconds = durationInMs / 1000;
+        long seconds = durationInSeconds % 60;
+        long minutes = (durationInSeconds % 3600) / 60;
+        long hours = durationInSeconds / 3600;
+        if (hours > 0) {
+            return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
+        }
+        return String.format(Locale.US, "%02d:%02d", minutes, seconds);
     }
 }
