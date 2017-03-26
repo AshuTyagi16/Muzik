@@ -27,17 +27,17 @@ public class SongPlayerActivity extends SingleFragmentActivity {
 
     @Override
     protected String setActionBarTitle() {
-        return "Player Activity";
+        return "Player";
     }
 
     @Override
     protected boolean showActionBar() {
-        return true;
+        return false;
     }
 
     @Override
     protected int setActionBarColor() {
-        return R.color.player_action_bar;
+        return R.color.transparent;
     }
 
     public static Intent newIntent(Context context, ArrayList<Song> list, int playingindex) {

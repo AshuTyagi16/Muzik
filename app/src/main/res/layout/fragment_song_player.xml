@@ -8,7 +8,7 @@
         android:id="@+id/visualizer_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:av_backgroundColor="@color/bottom_wave"
+        app:av_backgroundColor="@color/top_wave"
         app:av_bubblesPerLayer="16"
         app:av_bubblesRandomizeSizes="true"
         app:av_bubblesSize="@dimen/bubble_size"

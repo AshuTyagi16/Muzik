@@ -3,6 +3,7 @@ package com.music.player.muzik.fragment;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -30,6 +31,7 @@ import com.squareup.picasso.Target;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +42,7 @@ import butterknife.BindView;
  */
 
 public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
+        MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, PlayLayout.OnButtonsClickListener, PlayLayout.OnProgressChangedListener {
 
     @BindView(R.id.play_layout)
     PlayLayout mPlayLayout;
@@ -55,6 +57,8 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
     private boolean preparing;
     private int playingIndex = -1;
     private boolean paused;
+    private boolean shuffle = false;
+    private boolean repeat = false;
     private static ArrayList<Song> mSongList;
 
     private static final String EXTRA_PLAYING_INDEX = "playing_index";
@@ -77,65 +81,38 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (getArguments() != null)
             playingIndex = getArguments().getInt(EXTRA_PLAYING_INDEX, 0);
-        mPlayLayout.setOnButtonsClickListener(new PlayLayout.OnButtonsClickListenerAdapter() {
-            @Override
-            public void onPlayButtonClicked() {
-                playButtonClicked();
-            }
+    }
 
-            @Override
-            public void onSkipPreviousClicked() {
-                onPreviousClicked();
-                if (!mPlayLayout.isOpen()) {
-                    mPlayLayout.startRevealAnimation();
-                }
-            }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-            @Override
-            public void onSkipNextClicked() {
-                onNextClicked();
-                if (!mPlayLayout.isOpen()) {
-                    mPlayLayout.startRevealAnimation();
-                }
-            }
+        setupPlayerUI();
 
-            @Override
-            public void onShuffleClicked() {
-                Toast.makeText(getContext(), "Stub", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onRepeatClicked() {
-                Toast.makeText(getContext(), "Stub", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mPlayLayout.setOnProgressChangedListener(new PlayLayout.OnProgressChangedListener() {
-            @Override
-            public void onPreSetProgress() {
-                stopTrackingPosition();
-            }
-
-            @Override
-            public void onProgressChanged(float progress) {
-                Log.i("onProgressChanged", "Progress = " + progress);
-                mediaPlayer.seekTo((int) (mediaPlayer.getDuration() * progress));
-                startTrackingPosition();
-            }
-
-        });
+        mPlayLayout.setOnButtonsClickListener(this);
+        mPlayLayout.setOnProgressChangedListener(this);
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         mPlayLayout.fastOpen();
-        startCurrentTrack();
         mAudioVisualization.linkTo(DbmHandler.Factory.newVisualizerHandler(getContext(), 0));
+        startCurrentTrack();
+    }
+
+    public void setupPlayerUI() {
+        mPlayLayout.setBigDiffuserColorResource(R.color.transparent);
+        mPlayLayout.setMediumDiffuserColorResource(R.color.transparent);
+        mPlayLayout.setPlayButtonBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.middle_wave)));
+        mPlayLayout.setProgressLineColorResource(R.color.second_bottom_wave);
+        mPlayLayout.setProgressBallColorResource(R.color.bottom_wave);
     }
 
     private void checkVisualiserPermissions() {
@@ -240,6 +217,8 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
         super.onDestroy();
     }
 
+    //MEDIA PLAYER LISTENERS
+
     @Override
     public void onPrepared(MediaPlayer mp) {
         preparing = false;
@@ -258,33 +237,14 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
             }
             return;
         }
-        playingIndex++;
+        if (!repeat)
+            playingIndex++;
         if (playingIndex >= mSongList.size()) {
             playingIndex = 0;
             if (mSongList.size() == 0) {
 //                audioWidget.controller().stop();
                 return;
             }
-        }
-        startCurrentTrack();
-    }
-
-    public void onNextClicked() {
-        if (mSongList.size() == 0)
-            return;
-        playingIndex++;
-        if (playingIndex >= mSongList.size()) {
-            playingIndex = 0;
-        }
-        startCurrentTrack();
-    }
-
-    public void onPreviousClicked() {
-        if (mSongList.size() == 0)
-            return;
-        playingIndex--;
-        if (playingIndex < 0) {
-            playingIndex = mSongList.size() - 1;
         }
         startCurrentTrack();
     }
@@ -313,6 +273,11 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
 
     }
 
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        preparing = true;
+        return false;
+    }
 
     private void stopTrackingPosition() {
         if (timer == null)
@@ -321,45 +286,6 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
         timer.purge();
         timer = null;
     }
-
-    private void playButtonClicked() {
-        if (mPlayLayout == null) {
-            return;
-        }
-        if (mPlayLayout.isOpen()) {
-            mediaPlayer.pause();
-            mPlayLayout.startDismissAnimation();
-        } else {
-            mediaPlayer.start();
-            mPlayLayout.startRevealAnimation();
-        }
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        preparing = true;
-        return false;
-    }
-
-//    private void selectNewTrack(Intent intent) {
-//        if (preparing) {
-//            return;
-//        }
-//        if (intent.hasExtra(EXTRA_FILE_URIS)) {
-//            addNewTracks(intent);
-//        }
-//        MusicItem item = intent.getParcelableExtra(EXTRA_SELECT_TRACK);
-//        if (item == null && playingIndex == -1 || playingIndex != -1 && items.get(playingIndex).equals(item)) {
-//            if (mediaPlayer.isPlaying()) {
-//                mPlayLayout.startDismissAnimation();
-//            } else {
-//                mPlayLayout.startRevealAnimation();
-//            }
-//            return;
-//        }
-//        playingIndex = items.indexOf(item);
-//        startCurrentTrack();
-//    }
 
     private void startCurrentTrack() {
         setImageForItem();
@@ -403,6 +329,7 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
         }
     };
 
+    //CONVERTING MILLI SECONDS TO MM:SS
 
     private String convertDuration(long durationInMs) {
         long durationInSeconds = durationInMs / 1000;
@@ -413,5 +340,111 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
             return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
         }
         return String.format(Locale.US, "%02d:%02d", minutes, seconds);
+    }
+
+    // PLAY BUTTON LISTENERS
+
+    @Override
+    public void onPlayButtonClicked() {
+        playButtonClicked();
+    }
+
+    @Override
+    public void onSkipPreviousClicked() {
+        onPreviousClicked();
+        if (!mPlayLayout.isOpen()) {
+            mPlayLayout.startRevealAnimation();
+        }
+    }
+
+    @Override
+    public void onSkipNextClicked() {
+        onNextClicked();
+        if (!mPlayLayout.isOpen()) {
+            mPlayLayout.startRevealAnimation();
+        }
+    }
+
+    @Override
+    public void onShuffleClicked() {
+        if (shuffle) {
+            shuffle = false;
+            Toast.makeText(getContext(), getString(R.string.shuffle_off), Toast.LENGTH_SHORT).show();
+        } else {
+            shuffle = true;
+            Toast.makeText(getContext(), getString(R.string.shuffle_on), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRepeatClicked() {
+        if (repeat) {
+            repeat = false;
+            Toast.makeText(getContext(), getString(R.string.repeat_off), Toast.LENGTH_SHORT).show();
+        } else {
+            repeat = true;
+            Toast.makeText(getContext(), getString(R.string.repeat_on), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void playButtonClicked() {
+        if (mPlayLayout == null) {
+            return;
+        }
+        if (mPlayLayout.isOpen()) {
+            mediaPlayer.pause();
+            mPlayLayout.startDismissAnimation();
+        } else {
+            mediaPlayer.start();
+            mPlayLayout.startRevealAnimation();
+        }
+    }
+
+
+    public void onNextClicked() {
+        if (mSongList.size() == 0) {
+            return;
+        } else
+            checkforShuffle(1); //BUTTON STATE NEXT
+        if (playingIndex >= mSongList.size()) {
+            playingIndex = 0;
+        }
+        startCurrentTrack();
+    }
+
+    public void checkforShuffle(int button_state) {
+        if (shuffle) {
+            playingIndex = new Random().nextInt(mSongList.size() - 1) + 1;
+        } else {
+            if (button_state == 1)
+                playingIndex++;
+            else if (button_state == 0)
+                playingIndex--;
+        }
+    }
+
+    public void onPreviousClicked() {
+        if (mSongList.size() == 0) {
+            return;
+        } else
+            checkforShuffle(0); //BUTTON STATE PREVIOUS
+        if (playingIndex < 0) {
+            playingIndex = mSongList.size() - 1;
+        }
+        startCurrentTrack();
+    }
+
+    //PLAY LAYOUT PROGRESS LISTENERS
+
+    @Override
+    public void onPreSetProgress() {
+        stopTrackingPosition();
+    }
+
+    @Override
+    public void onProgressChanged(float progress) {
+        Log.i("onProgressChanged", "Progress = " + progress);
+        mediaPlayer.seekTo((int) (mediaPlayer.getDuration() * progress));
+        startTrackingPosition();
     }
 }

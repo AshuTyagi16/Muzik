@@ -10,6 +10,10 @@
     <color name="player_action_bar">#FF6347</color>
 
     <color name="bottom_wave">#f7b09e</color>
+    <color name="top_wave">#8f367c</color>
+    <color name="second_top_wave">#bc428b</color>
+    <color name="middle_wave">#e36a97</color>
+    <color name="second_bottom_wave">#f0979b</color>
 
     <!--General Colors-->
     <color name="white">#ffffff</color>

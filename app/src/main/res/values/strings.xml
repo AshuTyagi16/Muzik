@@ -20,6 +20,11 @@
     <string name="toast_permissions_not_granted">Permissions not granted.</string>
     <string name="permissions_title">Permissions</string>
     <string name="search">Search</string>
+    <string name="song_not_selected">Song not selected</string>
+    <string name="shuffle_on">Shuffle ON</string>
+    <string name="shuffle_off">Shuffle OFF</string>
+    <string name="repeat_on">Repeat ON</string>
+    <string name="repeat_off">Repeat OFF</string>
 
     <!-- AudioVisualization View -->
     <string name="wallpaper_name">Audio Visualization Wallpaper</string>
