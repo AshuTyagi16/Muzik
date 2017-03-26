@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cleveroad.audiovisualization.AudioVisualization;
@@ -28,6 +29,7 @@ import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +46,8 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
     PlayLayout mPlayLayout;
     @BindView(R.id.visualizer_view)
     AudioVisualization mAudioVisualization;
+    @BindView(R.id.tv_current_duration)
+    TextView mTvCurrentDuration;
 
     private VisualizerShadowChanger mShadowChanger;
     private MediaPlayer mediaPlayer;
@@ -286,18 +290,27 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
     }
 
     private void startTrackingPosition() {
-        timer = new Timer("MainActivity Timer");
+        timer = new Timer("Player Timer");
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 MediaPlayer tempMediaPlayer = mediaPlayer;
-                if (tempMediaPlayer != null && tempMediaPlayer != null && tempMediaPlayer.isPlaying()) {
-
+                if (tempMediaPlayer != null && tempMediaPlayer.isPlaying()) {
                     mPlayLayout.setPostProgress((float) tempMediaPlayer.getCurrentPosition() / tempMediaPlayer.getDuration());
+                }
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mediaPlayer != null && mTvCurrentDuration != null)
+                                mTvCurrentDuration.setText(String.valueOf(convertDuration(mediaPlayer.getCurrentPosition())));
+                        }
+                    });
                 }
 
             }
         }, UPDATE_INTERVAL, UPDATE_INTERVAL);
+
     }
 
 
@@ -389,4 +402,16 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
 
         }
     };
+
+
+    private String convertDuration(long durationInMs) {
+        long durationInSeconds = durationInMs / 1000;
+        long seconds = durationInSeconds % 60;
+        long minutes = (durationInSeconds % 3600) / 60;
+        long hours = durationInSeconds / 3600;
+        if (hours > 0) {
+            return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
+        }
+        return String.format(Locale.US, "%02d:%02d", minutes, seconds);
+    }
 }
