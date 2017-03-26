@@ -21,6 +21,7 @@ android {
 }
 
 dependencies {
+    final COLOR_PICKER_VERSION = '1.5'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -44,4 +45,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.android.support:design:25.2.0'
     compile 'jp.wasabeef:picasso-transformations:2.1.2'
+    compile 'com.google.code.gson:gson:2.4'
+    compile "com.larswerkman:HoloColorPicker:$COLOR_PICKER_VERSION"
 }

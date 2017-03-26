@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.cleveroad.audiovisualization.AudioVisualization;
+import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.play_widget.PlayLayout;
 import com.cleveroad.play_widget.VisualizerShadowChanger;
 import com.music.player.muzik.R;
@@ -40,6 +42,8 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
 
     @BindView(R.id.play_layout)
     PlayLayout mPlayLayout;
+    @BindView(R.id.visualizer_view)
+    AudioVisualization mAudioVisualization;
 
     private VisualizerShadowChanger mShadowChanger;
     private MediaPlayer mediaPlayer;
@@ -127,7 +131,7 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mPlayLayout.fastOpen();
         startCurrentTrack();
-
+        mAudioVisualization.linkTo(DbmHandler.Factory.newVisualizerHandler(getContext(), 0));
     }
 
     private void checkVisualiserPermissions() {
@@ -200,14 +204,16 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
 
     @Override
     public void onResume() {
-        super.onResume();
+        mAudioVisualization.onResume();
         if (mShadowChanger != null) {
             mShadowChanger.setEnabledVisualization(true);
         }
+        super.onResume();
     }
 
     @Override
     public void onPause() {
+        mAudioVisualization.onPause();
         if (mShadowChanger != null) {
             mShadowChanger.setEnabledVisualization(false);
         }
@@ -216,6 +222,7 @@ public class SongPlayerFragment extends MusicFragment implements MediaPlayer.OnP
 
     @Override
     public void onDestroy() {
+        mAudioVisualization.release();
         if (mShadowChanger != null) {
             mShadowChanger.release();
         }

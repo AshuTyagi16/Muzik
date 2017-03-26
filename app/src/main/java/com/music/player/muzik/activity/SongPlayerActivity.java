@@ -37,7 +37,7 @@ public class SongPlayerActivity extends SingleFragmentActivity {
 
     @Override
     protected int setActionBarColor() {
-        return R.color.background_action_bar;
+        return R.color.player_action_bar;
     }
 
     public static Intent newIntent(Context context, ArrayList<Song> list, int playingindex) {
